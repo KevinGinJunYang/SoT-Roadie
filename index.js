@@ -19,4 +19,6 @@ app.get('/fuel/:numberPlate', (req, res) => {
 });
 
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express sever is listening")
+});
