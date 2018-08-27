@@ -4,7 +4,7 @@ const app = express();
 const path = require('path');
 const request = require('request');
 
-app.use(express.static('..'));
+app.use(express.static('public'));
 
 app.get('/fuel/:numberPlate', (req, res) => {
     request('http://resources.fuelsaver.govt.nz/ecca_tools_resources/webservices/webservice.php?service=fuel_label_generator&action=get_text&ref_type=plate&ref_value=' + req.params.numberPlate, function (error, response, body) {
