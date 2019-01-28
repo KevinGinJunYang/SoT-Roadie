@@ -12,8 +12,22 @@ app.get('/fuel/:numberPlate', (req, res) => {
           const data = JSON.parse(body).data
           const milage = data.milage.value.split(" ")[0];
           const make = data.make.value;
-          const results = {milage: parseFloat(milage), make: make}
+          var fuelCost = 0
+          var fuelType = ""
+          if (data.note.value.includes("petrol")) {
+            fuelCost = 2.3
+            fuelType = "Petrol"
+          } else if (data.note.value.includes("diesel")) {
+            fuelCost = 1.5
+            fuelType = "Diesel"
+          } else {
+            fuelCost = 2;
+            fuelType = "Unknown"
+          }
+          const results = {milage: parseFloat(milage), make: make, fuelCost: fuelCost, fuelType: fuelType}
           res.send(JSON.stringify(results));
+        } else {
+          res.send(error);
         }
     })
 });

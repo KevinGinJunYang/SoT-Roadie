@@ -1,125 +1,156 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131294467-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-131294467-1');
+  </script>
+
+
+  <title>Roadtrip</title>
   <link href="style.css" rel="stylesheet">
+  <!-- COMMON TAGS -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roadtrip</title>
+  <!-- Search Engine -->
+  <meta name="description" content="Magic fuel cost calculator for Kiwi roadtrips">
+  <!-- Schema.org for Google -->
+  <meta itemprop="name" content="Roadtrip">
+  <meta itemprop="description" content="Magic fuel cost calculator for Kiwi roadtrips">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Roadtrip">
+  <meta name="twitter:description" content="Magic fuel cost calculator for Kiwi roadtrips">
+  <meta name="twitter:image:src" content="https://i.imgur.com/kO0g3wh.png">
+  <!-- Open Graph general (Facebook, Pinterest & Google+) -->
+  <meta name="og:title" content="Roadtrip">
+  <meta name="og:description" content="Magic fuel cost calculator for Kiwi roadtrips">
+  <meta name="og:image" content="https://i.imgur.com/AyIWMYo.png">
+  <meta name="og:url" content="https://www.roadtrip.nz">
+  <meta name="og:site_name" content="Roadtrip">
+  <meta name="og:type" content="website">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#318cb7">
+  <meta name="msapplication-TileColor" content="#318cb7">
+  <meta name="theme-color" content="#318cb7">
+
 </head>
+
 <body>
-  <div class="container">
-    <h1>Roadie helps you figure out how much your road trip is going to cost, based on petrol prices</h1>
 
-    <input type="text" id="start" placeholder="Start place" />
-
-    <br>
-    <input type="text" id="destination" placeholder="End place" />
-
-    <br>
-    <input type="text" id="milage" placeholder="Car Number Plate"/>
-
-    or
-
-    <select id="car_size">
-        <option value="9.3">Small car</option>
-        <option value="8">Big car/SUV</option>
-        <option value="7">Van/Truck</option>
-    </select>
-
-    <ul class="segmented-control">
-    <li class="segmented-control__item">
-        <input class="segmented-control__input" type="radio" value="1" name="option" id="petrol" checked>
-        <label class="segmented-control__label" for="petrol">Petrol</label>
-    </li>
-    <li class="segmented-control__item">
-        <input class="segmented-control__input" type="radio" value="2" name="option" id="diesel" >
-        <label class="segmented-control__label" for="diesel">Diesel</label>
-    </li>
-</ul>
-
-    <br>
-    <button id="submit">calculate cost</button>
-    <div id='output'></div>
-    <div class="output">
-        <h2>Estimated fuel price</h2>
-        <h3 id="estFuelCost">$--</h3>
-        <div class="info-container">
-            <p class="info-header">Trip distance</p>
-            <p id="tripDist">-- km</p><br>
+  <div class="container input-container">
+    <div class="form-block">
+      <form id="roadtrip-form" name="roadtrip-form" data-name="Roadtrip Form" class="form">
+        <div class="input-container">
+          <div class="origin-icon"></div>
+          <input type="text" class="input" maxlength="256" name="Origin" data-name="Origin" placeholder="Start place"
+            id="start">
         </div>
-
-        <div class="info-container">
-            <p class="info-header">Make</p>
-            <p id="car-make">--</p><br>
+        <div class="input-container">
+          <div class="destination-icon"></div>
+          <input type="text" class="input" maxlength="256" name="Destination" data-name="Destination" placeholder="End place"
+            id="destination">
         </div>
-
-        <div class="info-container">
-            <p class="info-header">Fuel efficiency</p>
-            <p id="milageOut">-- km/L</p><br>
+        <div class="input-container">
+          <div class="rego-icon"></div>
+          <input type="text" class="input" maxlength="6" name="Rego" data-name="Rego" placeholder="Licence plate number"
+            id="milage" onkeypress="return runScript(event)">
         </div>
-
-        <div class="info-container">
-            <p class="info-header">Fuel type</p>
-            <p id="fuel-type">Petrol</p><br>
-        </div>
-
-        <div class="info-container">
-            <p class="info-header">Fuel cost</p>
-            <p id="costPerLitreOut">$-/L</p><br>
-        </div>
-
-
+      </form>
     </div>
-    <br>
-</div>
+    <button id="submit">Calculate cost</button>
+  </div>
 
+  <div class="results-container container" id="results-container">
+    <div class="results-text-container">
+      <div class="text-block">One way</div>
+      <div class="text-block-2" id="estFuelCost">$--</div>
+      <div class="text-block-3" id="car-make">--</div>
+      <div class="badge-container">
+        <div class="text-block-4" id="tripDist">--km</div>
+      </div>
+    </div>
+    <div class="stats-container">
+      <div class="stat-block">
+        <div class="petrol-price" id="milageOut">--</div>
+        <div class="milage-text">L/100km</div>
+        <div class="sub-text" id="milageSubtext"></div>
+      </div>
+      <div class="stat-block">
+        <div class="petrol-price" id="costPerLitreOut">$--</div>
+        <div class="petro--text" id="fuelTypehtml"></div>
+        <div class="sub-text" id="fuelSubtext"></div>
+      </div>
+    </div>
+  </div>
 
   <div id='map'></div>
 
-<script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-  let costPerLitre = 2.3;
-  let distanceOld;
-  let distance;
-  let distanceText;
+  <script>
 
-  // Google stuff
-  var map;
-  var service;
-  var geocoder;
-  var directionsService;
-  var directionsDisplay;
-  var acStart;
-  var acDest;
-  var bounds;
-  var markersArray = [];
-  var pointA;
-  var pointB;
+    let costPerLitre = 2.3;
+    let distanceOld;
+    let distance;
+    let distanceText;
 
-  var destinationIcon = 'https://chart.googleapis.com/chart?' +
+    var origin = ""
+    var destination = ""
+
+    // Google stuff
+    var map;
+    var service;
+    var geocoder;
+    var directionsService;
+    var directionsDisplay;
+    var acStart;
+    var acDest;
+    var bounds;
+    var markersArray = [];
+    var pointA;
+    var pointB;
+
+    var destinationIcon = 'https://chart.googleapis.com/chart?' +
       'chst=d_map_pin_letter&chld=D|FF0000|000000';
-  var originIcon = 'https://chart.googleapis.com/chart?' +
+    var originIcon = 'https://chart.googleapis.com/chart?' +
       'chst=d_map_pin_letter&chld=O|FFFF00|000000';
 
-function initMap() {
-  bounds = new google.maps.LatLngBounds
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -41.2865, lng: 174.7762},
-    zoom: 10
-  });
-  service = new google.maps.DistanceMatrixService;
-  geocoder = new google.maps.Geocoder;
-  directionsService = new google.maps.DirectionsService,
-  directionsDisplay = new google.maps.DirectionsRenderer({
-    map: map
-  })
-  var acOptions = {
-    componentRestrictions: {country: 'nz'}
-  };
+    function initMap() {
+      bounds = new google.maps.LatLngBounds
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -41.2865, lng: 174.7762 },
+        zoom: 10,
+        disableDefaultUI: true
+      });
+      service = new google.maps.DistanceMatrixService;
+      geocoder = new google.maps.Geocoder;
+      directionsService = new google.maps.DirectionsService,
+        directionsDisplay = new google.maps.DirectionsRenderer({
+          map: map
+        })
+      var acOptions = {
+        componentRestrictions: { country: 'nz' }
+      };
 
-  const start = document.getElementById("start");
-  const dest = document.getElementById("destination");
-  acStart = new google.maps.places.Autocomplete(start,acOptions);
-  acDest = new google.maps.places.Autocomplete(dest,acOptions);
-}
-document.addEventListener("DOMContentLoaded", function(event) {
+      const start = document.getElementById("start");
+      const dest = document.getElementById("destination");
+      acStart = new google.maps.places.Autocomplete(start, acOptions);
+      acDest = new google.maps.places.Autocomplete(dest, acOptions);
+    }
+
 
     const start = document.getElementById("start");
     const dest = document.getElementById("destination");
@@ -138,151 +169,183 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     const carSizeSelect = document.getElementById("car_size");
 
-  function deleteMarkers(markersArray) {
-        for (var i = 0; i < markersArray.length; i++) {
-          markersArray[i].setMap(null);
-        }
-        markersArray = [];
-  }
+    function deleteMarkers(markersArray) {
+      for (var i = 0; i < markersArray.length; i++) {
+        markersArray[i].setMap(null);
+      }
+      markersArray = [];
+    }
 
-  function getDistance(callback) {
-    service.getDistanceMatrix({
-          origins: [start.value],
-          destinations: [dest.value],
-          travelMode: 'DRIVING',
-          unitSystem: google.maps.UnitSystem.METRIC,
-          avoidHighways: false,
-          avoidTolls: false
-        }, function(response, status) {
-          if (status !== 'OK') {
-            alert('Error was: ' + status);
-          } else {
-            var originList = response.originAddresses;
-            var destinationList = response.destinationAddresses;
+    function getDistance(callback) {
+      service.getDistanceMatrix({
+        origins: [start.value],
+        destinations: [dest.value],
+        travelMode: 'DRIVING',
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false
+      }, function (response, status) {
+        if (status !== 'OK') {
+          alert('Error was: ' + status);
+        } else {
+          var originList = response.originAddresses;
+          var destinationList = response.destinationAddresses;
 
-            deleteMarkers(markersArray);
+          deleteMarkers(markersArray);
 
-            var showGeocodedAddressOnMap = function(asDestination) {
-              var icon = asDestination ? destinationIcon : originIcon;
-              return function(results, status) {
-                if (status === 'OK') {
-                  map.fitBounds(bounds.extend(results[0].geometry.location));
-                  // markersArray.push(new google.maps.Marker({
-                  //   map: map,
-                  //   position: results[0].geometry.location,
-                  //   icon: icon
-                  // }));
-                } else {
-                  alert('Geocode was not successful due to: ' + status);
-                }
-              };
-            };
-            for (var i = 0; i < originList.length; i++) {
-              var results = response.rows[i].elements;
-              geocoder.geocode({'address': originList[i]},
-                  showGeocodedAddressOnMap(false));
-              pointA = originList[i];
-              for (var j = 0; j < results.length; j++) {
-                geocoder.geocode({'address': destinationList[j]},
-                    showGeocodedAddressOnMap(false));
-                pointB = destinationList[j];
-                distance = results[j].distance.value;
-                distanceText = results[j].distance.text;
+          var showGeocodedAddressOnMap = function (asDestination) {
+            var icon = asDestination ? destinationIcon : originIcon;
+            return function (results, status) {
+              if (status === 'OK') {
+                map.fitBounds(bounds.extend(results[0].geometry.location));
+                // markersArray.push(new google.maps.Marker({
+                //   map: map,
+                //   position: results[0].geometry.location,
+                //   icon: icon
+                // }));
+              } else {
+                alert("Please check you've entered a correct place name\nError code: " + status);
               }
+            };
+          };
+          for (var i = 0; i < originList.length; i++) {
+            var results = response.rows[i].elements;
+            geocoder.geocode({ 'address': originList[i] },
+              showGeocodedAddressOnMap(false));
+            pointA = originList[i];
+            for (var j = 0; j < results.length; j++) {
+              geocoder.geocode({ 'address': destinationList[j] },
+                showGeocodedAddressOnMap(false));
+              pointB = destinationList[j];
+              distance = results[j].distance.value;
+              distanceText = results[j].distance.text;
             }
           }
-          calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
-          callback(distance);
         }
+        calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
+        callback(distance);
+        console.log(pointA, pointB)
+        origin = pointA
+        destination = pointB
+      }
       );
-  }
-
-  function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
-  directionsService.route({
-    origin: pointA,
-    destination: pointB,
-    travelMode: google.maps.TravelMode.DRIVING
-  }, function(response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(response);
-    } else {
-      window.alert('Directions request failed due to ' + status);
-    }
-  });
-}
-
-function lookUpLicence(licence){
-  return fetch("/fuel/" + licence).then(res => res.json())
-}
-
-
-  function getTotalCost(milage, distance){
-     let litres = (distance / 1000) / milage;
-     return (litres * getCostPerLitre()).toFixed(2);
-  }
-
-  function setOutput(cost, milage) {
-    estFuelCost.innerHTML = "$" + cost;
-    tripDist.innerHTML = distanceText;
-    milageOut.innerHTML = milage + " km/L";
-    costPerLitreOut.innerHTML = "$" + costPerLitre + "/L";
-
-  }
-
-  function getSelectedFuelType() {
-    if(document.getElementById("petrol").checked){
-      return 'petrol';
-    }
-    if (document.getElementById("diesel").checked){
-      return 'diesel';
-    }
-  }
-
-  function getCostPerLitre()
-  {
-    //value of radio button selected
-    if(document.getElementById("petrol").checked){
-      costPerLitre = 2.29;
-    }
-    if (document.getElementById("diesel").checked){
-      costPerLitre = 1.64;
     }
 
-    return costPerLitre;
-    ///costPerLitre = document.getElementById("PetrolType").value;
-
-  //value of radio button selected
-  }
-
-
-  submit.onclick = () => {
-    document.getElementById('fuel-type').innerText = getSelectedFuelType();
-    const licence = licencePlateTextField.value;
-    console.log(licence);
-
-    getDistance(function(distance) {
-      const licencePromise = licence ? lookUpLicence(licence) : Promise.resolve({});
-
-      licencePromise.then(function (carData){
-        carMakeOut.innerText = carData.make || "unknown";
-        console.log(carData);
-        let milage;
-        if (!carData.milage) {
-          milage = parseFloat(carSizeSelect.options[carSizeSelect.selectedIndex].value);
+    function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
+      directionsService.route({
+        origin: pointA,
+        destination: pointB,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
         } else {
-          milage = carData.milage;
+          window.alert('Directions request failed due to ' + status);
         }
-        console.log('milage', milage)
-        const totalCost = getTotalCost(milage, distance)
-        console.log(totalCost);
-        setOutput(totalCost, milage);
-      })
-    });
-  };
-});
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZ_KrBDsSmofa4csc6YFAsxd8M3LHQyLg&libraries=places&callback=initMap">
-</script>
+      });
+    }
+
+    function lookUpLicence(licence) {
+      return fetch("/fuel/" + licence).then(res => res.json())
+    }
+
+    function getTotalCost(milage, distance, fuelCost) {
+      // distance/1000 = km, milage(L/100km) * km / 100 = cost
+      let litres = (distance / 1000) * milage / 100;
+      console.log("fuel is " + fuelCost)
+      return (litres * fuelCost).toFixed(2);
+    }
+
+    function toTitleCase(str) {
+      return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+    }
+
+    function setOutput(cost, milage, fuelType, fuelCost, carMake) {
+      estFuelCost.innerHTML = "$" + cost;
+      tripDist.innerHTML = distanceText;
+      milageOut.innerHTML = milage;
+      costPerLitreOut.innerHTML = "$" + fuelCost + "/L";
+
+      console.log(fuelType);
+
+      if (fuelType == "Unknown") {
+        fuelTypehtml.innerHTML = "Petrol price";
+        fuelSubtext.innerHTML = "Could not find car's fuel type, default is petrol.";
+      } else {
+        fuelSubtext.innerHTML = "";
+        fuelTypehtml.innerHTML = fuelType + " price";
+      }
+
+      carMakeOut.innerText = carMake || "Unknown car type";
+    }
+
+
+    submit.onclick = () => {
+      calculateResult();
+    }
+
+    function runScript(e) {
+      //See notes about 'which' and 'key'
+      if (e.keyCode == 13) {
+        calculateResult();
+      }
+    }
+
+    function calculateResult() {
+      const licence = licencePlateTextField.value;
+
+      getDistance(function (distance) {
+        const licencePromise = licence ? lookUpLicence(licence) : Promise.resolve({});
+
+        licencePromise.then(function (carData) {
+          milage = 0;
+          fuelCost = 0;
+          fuelType = "";
+          carMake = "";
+
+
+          fuelCost = carData.fuelCost;
+          fuelType = carData.fuelType;
+          carMake = toTitleCase(carData.make);
+
+          if (carData.milage > 1) {
+            milage = carData.milage;
+            milageSubtext.innerHTML = "";
+          } else if (milage < 4 && milage > 0) {
+            milageOut.innerHTML = milage;
+            milageSubtext.innerHTML = "Looks like your car might be a hybrid. Sorry, roadtrip doesn't work properly with hybrids yet.";
+          } else {
+            milage = 10;
+            milageSubtext.innerHTML = "Could not find car's milage, default is 10L/100km.";
+          }
+
+          const totalCost = getTotalCost(milage, distance, fuelCost)
+          setOutput(totalCost, milage, fuelType, fuelCost, carMake);
+          document.getElementById('results-container').style.display = "block";
+
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            'event': 'submitPressed',
+            'Rego': licence,
+            'Car type': carData.make,
+            'Origin': origin,
+            'Destination': destination,
+            'Car milage': carData.milage,
+            'Trip cost': Number(totalCost)
+          });
+        })
+
+      });
+
+
+    };
+
+
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZ_KrBDsSmofa4csc6YFAsxd8M3LHQyLg&libraries=places&callback=initMap">
+  </script>
 </body>
+
 </html>
